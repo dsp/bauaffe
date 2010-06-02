@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<project name="bauaffe" default="compile">
+    <property name="version" value="3.0.0a2" />
+    <property name="build.dir" location="build/" />
+    <property name="source.dir" location="src/" />
+
+    <property name="scala.home" location="/Users/dsp/dev/scala-2.7.7.final/" />
+    <property name="scala-compiler.jar" location="/Users/dsp/dev/scala/scala-2.7.7.final/lib/scala-compiler.jar" />
+    <property name="scala-library.jar" location="/Users/dsp/dev/scala/scala-2.7.7.final/lib/scala-library.jar" />
+
+    <path id="build.classpath">
+        <pathelement location="${scala-library.jar}" />
+        <pathelement location="${build.dir}" />
+    </path>
+    <path id="scala.classpath">
+        <pathelement location="${scala-compiler.jar}"/>
+        <pathelement location="${scala-library.jar}"/>
+    </path>
+    <target name="init">
+        <taskdef resource="scala/tools/ant/antlib.xml">
+            <classpath refid="scala.classpath" />
+        </taskdef>    
+    </target>
+    <target name="compile" depends="init">
+        <scalac
+            srcdir="${source.dir}" destdir="${build.dir}"
+            classpathref="build.classpath"> 
+            <include name="*.scala" />
+        </scalac>
+    </target>
+    <target name="jar" depends="compile">
+        <jar destfile="bauaffe-${version}.jar">
+            <fileset dir="${build.dir}" />
+            <zipfileset src="${scala-library.jar}" />
+            <manifest>
+                <attribute name="Main-Class" value="Main" />
+            </manifest>
+        </jar>
+    </target>
+</project>
